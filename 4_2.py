@@ -1,7 +1,7 @@
 import sys, threading
 
 sys.setrecursionlimit(10**7) # max depth of recursion
-threading.stack_size(2**25)  # new thread will get stack of such size
+threading.stack_size(2**27)  # new thread will get stack of such size
 
 class TreeOrders:
   def read(self):
@@ -16,29 +16,30 @@ class TreeOrders:
           self.left[i] = b
           self.right[i] = c
 
-  def IsBinarySearchTree(self, i=0):
-    global trigger
+  def inOrder(self, i=0):
     if self.left[i] != -1:
-        self.IsBinarySearchTree(self.left[i])
+        self.inOrder(self.left[i])
     self.result.append(self.key[i])
-    print(self.result)
-    trigger += 1
-    if trigger > 1 and self.result[-1] < self.result[-2]:
-        print('false')
-        return False
     if self.right[i] != -1:
-        self.IsBinarySearchTree(self.right[i])
+        self.inOrder(self.right[i])
+    return self.result
 
 
-trigger = 0
+def IsBinarySearchTree(A):
+    for i in range(1, len(A)):
+        if A[i] < A[i-1]:
+            return False
+    return True
+
+
 def main():
     tree = TreeOrders()
     tree.read()
     if tree.n == 0:
         print("CORRECT")
         return
-    # print(TreeOrders.IsBinarySearchTree(tree))
-    if TreeOrders.IsBinarySearchTree(tree) == False:
+    in_order_traversal = tree.inOrder()
+    if IsBinarySearchTree(in_order_traversal) == False:
         print("INCORRECT")
     else:
         print("CORRECT")
